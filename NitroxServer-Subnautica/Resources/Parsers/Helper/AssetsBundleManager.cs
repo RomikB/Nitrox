@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using AssetsTools.NET;
 using AssetsTools.NET.Extra;
 using NitroxModel.DataStructures.Unity;
@@ -17,7 +18,12 @@ public class AssetsBundleManager : AssetsManager
         this.aaRootPath = aaRootPath;
     }
 
-    public string CleanBundlePath(string bundlePath) => aaRootPath + bundlePath.Substring(bundlePath.IndexOf('}') + 1);
+    public string CleanBundlePath(string bundlePath)
+    {
+        string fixedBundlePath = bundlePath.Substring(bundlePath.IndexOf('\\') + 1).Replace('\\', Path.DirectorySeparatorChar);
+        string cleanBundlePath = Path.Combine(aaRootPath, fixedBundlePath);
+        return cleanBundlePath;
+    }
 
     public AssetsFileInstance LoadBundleWithDependencies(string[] bundlePaths)
     {
