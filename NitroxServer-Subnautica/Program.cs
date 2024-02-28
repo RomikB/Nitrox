@@ -1,4 +1,4 @@
-﻿global using NitroxModel.Logger;
+global using NitroxModel.Logger;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -90,7 +90,7 @@ public class Program
             // Allow game path to be given as command argument
             if (args.Length > 0 && Directory.Exists(args[0]) && File.Exists(Path.Combine(args[0], "Subnautica.exe")))
             {
-                string gameDir = Path.GetFullPath(args[0]);
+                string gameDir = NitroxUser.GamePath = Path.GetFullPath(args[0]);
                 Log.Info($"Using game files from: {gameDir}");
                 gameInstallDir = new Lazy<string>(() => gameDir);
             }
