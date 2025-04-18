@@ -82,7 +82,7 @@ public class Program
             string gameDir;
             if (args.Length > 0 && Directory.Exists(args[0]) && File.Exists(Path.Combine(args[0], GameInfo.Subnautica.ExeName)))
             {
-                gameDir = Path.GetFullPath(args[0]);
+                gameDir = NitroxUser.GamePath = Path.GetFullPath(args[0]);
                 gameInstallDir = new Lazy<string>(() => gameDir);
             }
             else
