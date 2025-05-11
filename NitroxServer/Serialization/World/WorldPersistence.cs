@@ -119,6 +119,41 @@ public class WorldPersistence
         return CreateFreshWorld();
     }
 
+    private static readonly NitroxTechType skyrayTechType = new("Skyray");
+    
+    private static bool IsBadEntity(Entity entity)
+    {
+        if (skyrayTechType.Equals(entity.TechType))
+        {
+            return true;
+        }
+        if ((entity is CreatureRespawnEntity creatureTespawnEntity) && skyrayTechType.Equals(creatureTespawnEntity.RespawnTechType))
+        {
+            return true;
+        }
+        if (entity.ChildEntities != null)
+        {
+            foreach (Entity childEntity in entity.ChildEntities)
+            {
+                if (IsBadEntity(childEntity))
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private List<Entity> GetFilteredEntities(List<Entity> entities)
+    {
+        if (!config.SkipBadEntityOnLoad)
+        {
+            return entities;
+        }
+
+        return entities.Where(entity => !IsBadEntity(entity)).ToList();
+    }
+
     public World CreateWorld(PersistedWorldData pWorldData, NitroxGameMode gameMode)
     {
         string seed = pWorldData.WorldData.Seed;
@@ -136,7 +171,7 @@ public class WorldPersistence
         Log.Info($"Loading world with seed {seed}");
 
         EntityRegistry entityRegistry = NitroxServiceLocator.LocateService<EntityRegistry>();
-        entityRegistry.AddEntities(pWorldData.EntityData.Entities);
+        entityRegistry.AddEntities(GetFilteredEntities(pWorldData.EntityData.Entities));
         entityRegistry.AddEntitiesIgnoringDuplicate(pWorldData.GlobalRootData.Entities.OfType<Entity>().ToList());
 
         World world = new()

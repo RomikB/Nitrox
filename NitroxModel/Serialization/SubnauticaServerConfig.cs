@@ -126,5 +126,7 @@ namespace NitroxModel.Serialization
 
         [PropertyDescription("Activates/Deactivates Player versus Player damage/interactions")]
         public bool PvPEnabled { get; set; } = true;
+
+        public bool SkipBadEntityOnLoad { get; set; } = false;
     }
 }
